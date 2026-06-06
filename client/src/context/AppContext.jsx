@@ -47,6 +47,11 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     fetchData();
+    if (!user) return;
+    const interval = setInterval(() => {
+      fetchData();
+    }, 5000);
+    return () => clearInterval(interval);
   }, [user]);
 
   // Auth Operations
@@ -65,7 +70,7 @@ export const AppProvider = ({ children }) => {
   // RFQ Operations
   const createRfq = async (title, description, items, quantity, deadline, budget) => {
     try {
-      const res = await api.post('/rfqs', {
+      await api.post('/rfqs', {
         title,
         description,
         items,
@@ -73,7 +78,7 @@ export const AppProvider = ({ children }) => {
         budget: Number(budget),
         deadline
       });
-      setRfqs((prev) => [res.data, ...prev]);
+      await fetchData();
     } catch (error) {
       console.error('Failed to create RFQ:', error);
       alert(error.response?.data?.message || 'Failed to create RFQ. Please try again.');
@@ -83,10 +88,8 @@ export const AppProvider = ({ children }) => {
 
   const publishRfq = async (rfqId) => {
     try {
-      const res = await api.put(`/rfqs/${rfqId}/publish`);
-      setRfqs((prev) =>
-        prev.map((rfq) => (rfq.id === rfqId ? res.data : rfq))
-      );
+      await api.put(`/rfqs/${rfqId}/publish`);
+      await fetchData();
     } catch (error) {
       console.error('Failed to publish RFQ:', error);
       alert(error.response?.data?.message || 'Failed to publish RFQ. Please try again.');
@@ -94,17 +97,28 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const updateRfq = async (rfqId, data) => {
+    try {
+      await api.put(`/rfqs/${rfqId}`, data);
+      await fetchData();
+    } catch (error) {
+      console.error('Failed to update RFQ:', error);
+      alert(error.response?.data?.message || 'Failed to update RFQ. Please try again.');
+      throw error;
+    }
+  };
+
   // Quotation Operations
   const submitQuotation = async (rfqId, rfqTitle, price, leadTime, notes) => {
     try {
-      const res = await api.post('/quotations', {
+      await api.post('/quotations', {
         rfqId,
         rfqTitle,
         price: Number(price),
         leadTime: Number(leadTime),
         notes
       });
-      setQuotations((prev) => [res.data, ...prev]);
+      await fetchData();
     } catch (error) {
       console.error('Failed to submit Quotation:', error);
       alert(error.response?.data?.message || 'Failed to submit quotation. Please try again.');
@@ -114,20 +128,8 @@ export const AppProvider = ({ children }) => {
 
   const updateQuotationStatus = async (quoteId, status) => {
     try {
-      const res = await api.put(`/quotations/${quoteId}/status`, { status });
-      setQuotations((prev) =>
-        prev.map((q) => (q.id === quoteId ? { ...q, status } : q))
-      );
-      
-      // If approved, PO is created and RFQ is closed on backend. Sync lists:
-      if (status === 'Approved') {
-        const [poRes, rfqRes] = await Promise.all([
-          api.get('/purchase-orders'),
-          api.get('/rfqs')
-        ]);
-        setPurchaseOrders(poRes.data);
-        setRfqs(rfqRes.data);
-      }
+      await api.put(`/quotations/${quoteId}/status`, { status });
+      await fetchData();
     } catch (error) {
       console.error('Failed to update Quotation status:', error);
       alert(error.response?.data?.message || 'Failed to update quotation status. Please try again.');
@@ -135,20 +137,26 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const updateQuotation = async (quoteId, data) => {
+    try {
+      await api.put(`/quotations/${quoteId}`, data);
+      await fetchData();
+    } catch (error) {
+      console.error('Failed to update Quotation:', error);
+      alert(error.response?.data?.message || 'Failed to update Quotation. Please try again.');
+      throw error;
+    }
+  };
+
   // Invoice Operations
   const raiseInvoice = async (poId, invoiceNumber, notes) => {
     try {
-      const res = await api.post('/invoices', {
+      await api.post('/invoices', {
         poId,
         invoiceNumber,
         notes
       });
-      setInvoices((prev) => [res.data, ...prev]);
-      
-      // Update PO status to Invoiced in state
-      setPurchaseOrders((prev) =>
-        prev.map((p) => (p.id === poId ? { ...p, status: 'Invoiced' } : p))
-      );
+      await fetchData();
     } catch (error) {
       console.error('Failed to raise Invoice:', error);
       alert(error.response?.data?.message || 'Failed to raise invoice. Please try again.');
@@ -158,18 +166,8 @@ export const AppProvider = ({ children }) => {
 
   const payInvoice = async (invoiceId) => {
     try {
-      const res = await api.put(`/invoices/${invoiceId}/pay`);
-      setInvoices((prev) =>
-        prev.map((inv) => (inv.id === invoiceId ? res.data : inv))
-      );
-      
-      // Sync PO status
-      const inv = invoices.find((i) => i.id === invoiceId);
-      if (inv) {
-        setPurchaseOrders((prev) =>
-          prev.map((p) => (p.id === inv.poId ? { ...p, status: 'Completed' } : p))
-        );
-      }
+      await api.put(`/invoices/${invoiceId}/pay`);
+      await fetchData();
     } catch (error) {
       console.error('Failed to pay Invoice:', error);
       alert(error.response?.data?.message || 'Failed to process invoice payment. Please try again.');
@@ -186,13 +184,16 @@ export const AppProvider = ({ children }) => {
         rfqs,
         createRfq,
         publishRfq,
+        updateRfq,
         quotations,
         submitQuotation,
         updateQuotationStatus,
+        updateQuotation,
         purchaseOrders,
         raiseInvoice,
         invoices,
         payInvoice,
+        fetchData
       }}
     >
       {children}

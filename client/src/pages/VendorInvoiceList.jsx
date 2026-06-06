@@ -66,7 +66,7 @@ const VendorInvoiceList = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <HiOutlineCash className="w-4 h-4 text-slate-500" />
-                    <span>Invoice Amount: <strong className="text-white text-sm font-extrabold">${invoice.amount ? invoice.amount.toLocaleString() : 0}</strong></span>
+                    <span>Invoice Amount: <strong className="text-white text-sm font-extrabold">₹{invoice.amount ? invoice.amount.toLocaleString() : 0}</strong></span>
                   </div>
                 </div>
 

@@ -2,7 +2,7 @@ const { Quotation, Rfq, PurchaseOrder } = require('../models');
 
 const getQuotations = async (role, email) => {
   let filter = {};
-  if (role !== 'Admin') {
+  if (role !== 'Admin' && role !== 'SuperAdmin') {
     filter = { vendorEmail: email.toLowerCase() };
   }
   return await Quotation.find(filter).sort({ submittedDate: -1, id: -1 });
@@ -80,8 +80,33 @@ const updateQuotationStatus = async (id, status) => {
   return quote;
 };
 
+const updateQuotation = async (id, data) => {
+  const quote = await Quotation.findOne({ id });
+  if (!quote) {
+    throw new Error('Quotation not found.');
+  }
+
+  if (quote.status === 'Approved' || quote.status === 'Rejected') {
+    throw new Error('Cannot edit an approved or rejected quotation.');
+  }
+
+  if (data.price !== undefined) quote.price = Number(data.price);
+  if (data.leadTime !== undefined) quote.leadTime = Number(data.leadTime);
+  if (data.notes !== undefined) quote.notes = data.notes;
+  if (data.status !== undefined) {
+    if (data.status === 'Approved') {
+      return await updateQuotationStatus(id, 'Approved');
+    }
+    quote.status = data.status;
+  }
+
+  await quote.save();
+  return quote;
+};
+
 module.exports = {
   getQuotations,
   submitQuotation,
-  updateQuotationStatus
+  updateQuotationStatus,
+  updateQuotation
 };

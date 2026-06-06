@@ -2,7 +2,7 @@ const { Rfq } = require('../models');
 
 const getAllRfqs = async (role) => {
   let filter = {};
-  if (role !== 'Admin') {
+  if (role !== 'Admin' && role !== 'SuperAdmin') {
     filter = { status: { $in: ['Open', 'Closed'] } };
   }
   
@@ -43,8 +43,27 @@ const publishRfq = async (id) => {
   return rfq;
 };
 
+const updateRfq = async (id, data) => {
+  const rfq = await Rfq.findOne({ id });
+  if (!rfq) {
+    throw new Error('RFQ not found.');
+  }
+
+  if (data.title !== undefined) rfq.title = data.title;
+  if (data.description !== undefined) rfq.description = data.description;
+  if (data.items !== undefined) rfq.items = data.items;
+  if (data.quantity !== undefined) rfq.quantity = Number(data.quantity);
+  if (data.budget !== undefined) rfq.budget = Number(data.budget);
+  if (data.deadline !== undefined) rfq.deadline = data.deadline;
+  if (data.status !== undefined) rfq.status = data.status;
+
+  await rfq.save();
+  return rfq;
+};
+
 module.exports = {
   getAllRfqs,
   createRfq,
-  publishRfq
+  publishRfq,
+  updateRfq
 };

@@ -32,8 +32,18 @@ const updateStatus = async (req, res) => {
   }
 };
 
+const updateQuotation = async (req, res) => {
+  try {
+    const quote = await quotationService.updateQuotation(req.params.id, req.body);
+    return res.status(200).json(quote);
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getQuotations,
   submitQuotation,
-  updateStatus
+  updateStatus,
+  updateQuotation
 };

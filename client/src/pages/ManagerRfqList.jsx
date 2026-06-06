@@ -7,14 +7,60 @@ import {
   HiOutlineCurrencyDollar,
   HiOutlineFolderOpen,
   HiOutlineLightningBolt,
+  HiOutlinePencil,
 } from 'react-icons/hi';
 
 const ManagerRfqList = () => {
-  const { rfqs, publishRfq } = useApp();
+  const { user, rfqs, publishRfq, updateRfq } = useApp();
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+
+  // Edit RFQ Modal State
+  const [editingRfq, setEditingRfq] = useState(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editDescription, setEditDescription] = useState('');
+  const [editItems, setEditItems] = useState('');
+  const [editQuantity, setEditQuantity] = useState('');
+  const [editBudget, setEditBudget] = useState('');
+  const [editDeadline, setEditDeadline] = useState('');
+  const [editStatus, setEditStatus] = useState('');
+
+  const handleOpenEditModal = (rfq) => {
+    setEditingRfq(rfq);
+    setEditTitle(rfq.title || '');
+    setEditDescription(rfq.description || '');
+    setEditItems(rfq.items || '');
+    setEditQuantity(rfq.quantity || 0);
+    setEditBudget(rfq.budget || 0);
+    setEditDeadline(rfq.deadline || '');
+    setEditStatus(rfq.status || 'Pending');
+  };
+
+  const handleCloseEditModal = () => {
+    setEditingRfq(null);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (!editTitle || !editQuantity || !editBudget || !editDeadline) return;
+
+    try {
+      await updateRfq(editingRfq.id, {
+        title: editTitle,
+        description: editDescription,
+        items: editItems,
+        quantity: Number(editQuantity),
+        budget: Number(editBudget),
+        deadline: editDeadline,
+        status: editStatus,
+      });
+      handleCloseEditModal();
+    } catch (err) {
+      console.error('Failed to save changes to RFQ:', err);
+    }
+  };
 
   // Filter RFQs with null-safety checks
   const filteredRfqs = rfqs.filter((rfq) => {
@@ -40,7 +86,7 @@ const ManagerRfqList = () => {
         </div>
         <button
           onClick={() => navigate('/rfqs/create')}
-          className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-lg transition"
+          className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-lg transition cursor-pointer"
         >
           <span>Create New RFQ</span>
         </button>
@@ -54,7 +100,7 @@ const ManagerRfqList = () => {
             placeholder="Search by ID, title, or item..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-slate-955 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-lg py-2 pl-9 pr-4 text-sm outline-none text-white transition"
+            className="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-lg py-2.5 pl-9 pr-4 text-sm outline-none text-white transition"
           />
           <HiOutlineSearch className="w-5 h-5 text-slate-500 absolute left-3 top-2.5" />
         </div>
@@ -112,7 +158,7 @@ const ManagerRfqList = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <HiOutlineCurrencyDollar className="w-4 h-4 text-slate-500" />
-                    <span>Budget: <strong className="text-slate-100">${rfq.budget ? rfq.budget.toLocaleString() : 0}</strong></span>
+                    <span>Budget: <strong className="text-slate-100">₹{rfq.budget ? rfq.budget.toLocaleString() : 0}</strong></span>
                   </div>
                   <div className="flex items-center space-x-2 col-span-2">
                     <HiOutlineCalendar className="w-4 h-4 text-slate-500" />
@@ -127,17 +173,29 @@ const ManagerRfqList = () => {
                   Created on {rfq.createdDate}
                 </span>
 
-                {rfq.status === 'Pending' ? (
-                  <button
-                    onClick={() => publishRfq(rfq.id)}
-                    className="inline-flex items-center space-x-1 bg-indigo-600 hover:bg-indigo-750 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md active:translate-y-px transition"
-                  >
-                    <HiOutlineLightningBolt className="w-4 h-4" />
-                    <span>Publish RFQ</span>
-                  </button>
-                ) : (
-                  <span className="text-xs text-slate-500 font-medium">Published</span>
-                )}
+                <div className="flex items-center space-x-2">
+                  {user?.role !== 'SuperAdmin' && rfq.status !== 'Closed' && (
+                    <button
+                      onClick={() => handleOpenEditModal(rfq)}
+                      className="inline-flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-750 text-slate-300 border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold shadow active:translate-y-px transition cursor-pointer"
+                    >
+                      <HiOutlinePencil className="w-3.5 h-3.5" />
+                      <span>Edit</span>
+                    </button>
+                  )}
+
+                  {rfq.status === 'Pending' ? (
+                    <button
+                      onClick={() => publishRfq(rfq.id)}
+                      className="inline-flex items-center space-x-1 bg-indigo-600 hover:bg-indigo-750 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md active:translate-y-px transition cursor-pointer"
+                    >
+                      <HiOutlineLightningBolt className="w-4 h-4" />
+                      <span>Publish</span>
+                    </button>
+                  ) : (
+                    <span className="text-xs text-slate-500 font-bold tracking-wide uppercase px-2 py-1 bg-slate-950/40 rounded">Published</span>
+                  )}
+                </div>
               </div>
             </div>
           ))}
@@ -145,6 +203,130 @@ const ManagerRfqList = () => {
       ) : (
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-12 text-center">
           <p className="text-sm text-slate-400">No Request for Quotations found matching your search.</p>
+        </div>
+      )}
+
+      {/* Edit RFQ Modal overlay */}
+      {editingRfq && (
+        <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 relative shadow-2xl">
+            <h3 className="text-lg font-bold text-white mb-1">Edit Request for Quotation</h3>
+            <p className="text-xs text-slate-400 mb-4">
+              Modify details for RFQ ID: <span className="text-indigo-400 font-semibold">{editingRfq.id}</span>
+            </p>
+
+            <form onSubmit={handleEditSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
+                  RFQ Title / Project Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-lg py-2 px-3 text-sm text-white outline-none transition"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
+                  Description / Specifications
+                </label>
+                <textarea
+                  rows="3"
+                  value={editDescription}
+                  onChange={(e) => setEditDescription(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-lg py-2 px-3 text-sm text-white outline-none transition resize-none"
+                ></textarea>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    Item Category
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editItems}
+                    onChange={(e) => setEditItems(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-lg py-2 px-3 text-sm text-white outline-none transition"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    Quantity Required
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    value={editQuantity}
+                    onChange={(e) => setEditQuantity(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-lg py-2 px-3 text-sm text-white outline-none transition"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    Project Budget (₹)
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    value={editBudget}
+                    onChange={(e) => setEditBudget(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-lg py-2 px-3 text-sm text-white outline-none transition"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    RFQ Status
+                  </label>
+                  <select
+                    value={editStatus}
+                    onChange={(e) => setEditStatus(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-lg py-2 px-3 text-sm text-white outline-none transition cursor-pointer"
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Open">Open</option>
+                    <option value="Closed">Closed</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
+                  Submission Deadline
+                </label>
+                <input
+                  type="date"
+                  required
+                  value={editDeadline}
+                  onChange={(e) => setEditDeadline(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-lg py-2 px-3 text-sm text-white outline-none transition cursor-pointer"
+                />
+              </div>
+
+              <div className="flex items-center justify-end space-x-3 border-t border-slate-800 pt-4 mt-4">
+                <button
+                  type="button"
+                  onClick={handleCloseEditModal}
+                  className="text-slate-400 hover:text-slate-200 text-xs font-bold py-2 px-4 rounded-lg cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-indigo-600 hover:bg-indigo-750 text-white font-bold py-2 px-4 rounded-lg text-xs transition shadow-md cursor-pointer"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

@@ -111,7 +111,7 @@ const VendorDashboard = () => {
           </div>
           <div className="mt-4">
             <span className="text-2xl font-extrabold text-white">
-              ${vendorEarnings.toLocaleString()}
+              ₹{vendorEarnings.toLocaleString()}
             </span>
             <span className="text-xs text-slate-500 block mt-1">From processed invoices</span>
           </div>
@@ -142,7 +142,7 @@ const VendorDashboard = () => {
                   <div>
                     <h4 className="text-sm font-semibold text-slate-200">{rfq.title}</h4>
                     <p className="text-xs text-slate-400 mt-0.5">
-                      Budget: <span className="text-slate-300 font-medium">${rfq.budget ? rfq.budget.toLocaleString() : 0}</span> &bull; Deadline: <span className="text-slate-300 font-medium">{rfq.deadline}</span>
+                      Budget: <span className="text-slate-300 font-medium">₹{rfq.budget ? rfq.budget.toLocaleString() : 0}</span> &bull; Deadline: <span className="text-slate-300 font-medium">{rfq.deadline}</span>
                     </p>
                   </div>
                   <span className="text-[10px] uppercase font-extrabold px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
@@ -171,7 +171,7 @@ const VendorDashboard = () => {
               <div key={q.id} className="p-3 bg-slate-950 rounded-lg border border-slate-800 flex items-center justify-between">
                 <div>
                   <h4 className="text-xs font-bold text-slate-300 truncate max-w-[160px]">{q.rfqTitle}</h4>
-                  <span className="text-[10px] text-slate-400 font-semibold block mt-0.5">${q.price ? q.price.toLocaleString() : 0}</span>
+                  <span className="text-[10px] text-slate-400 font-semibold block mt-0.5">₹{q.price ? q.price.toLocaleString() : 0}</span>
                 </div>
                 <span
                   className={`text-[9px] uppercase font-bold px-2 py-0.5 rounded ${

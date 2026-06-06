@@ -58,7 +58,7 @@ const ManagerPoList = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <HiOutlineCash className="w-4 h-4 text-slate-500" />
-                    <span>PO Total Amount: <strong className="text-white font-bold">${po.totalAmount ? po.totalAmount.toLocaleString() : 0}</strong></span>
+                    <span>PO Total Amount: <strong className="text-white font-bold">₹{po.totalAmount ? po.totalAmount.toLocaleString() : 0}</strong></span>
                   </div>
                 </div>
 

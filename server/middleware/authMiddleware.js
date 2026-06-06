@@ -20,7 +20,7 @@ const authenticateToken = (req, res, next) => {
 
 const requireRole = (role) => {
   return (req, res, next) => {
-    if (!req.user || req.user.role !== role) {
+    if (!req.user || (req.user.role !== role && !(req.user.role === 'SuperAdmin' && role === 'Admin'))) {
       return res.status(403).json({ message: 'Access denied. Insufficient permissions.' });
     }
     next();

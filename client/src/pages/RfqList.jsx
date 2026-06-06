@@ -8,7 +8,7 @@ const RfqList = () => {
 
   if (!user) return null;
 
-  return user.role === 'Admin' ? <ManagerRfqList /> : <VendorRfqList />;
+  return (user.role === 'Admin' || user.role === 'SuperAdmin') ? <ManagerRfqList /> : <VendorRfqList />;
 };
 
 export default RfqList;

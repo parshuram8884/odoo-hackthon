@@ -6,5 +6,6 @@ const { authenticateToken, requireRole } = require('../middleware/authMiddleware
 router.get('/', authenticateToken, rfqController.getRfqs);
 router.post('/', authenticateToken, requireRole('Admin'), rfqController.createRfq);
 router.put('/:id/publish', authenticateToken, requireRole('Admin'), rfqController.publishRfq);
+router.put('/:id', authenticateToken, requireRole('Admin'), rfqController.updateRfq);
 
 module.exports = router;

@@ -87,7 +87,7 @@ const VendorQuotationList = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <HiOutlineCurrencyDollar className="w-4 h-4 text-slate-500" />
-                    <span>Bid Pricing: <strong className="text-white text-sm font-bold">${quote.price ? quote.price.toLocaleString() : 0}</strong></span>
+                    <span>Bid Pricing: <strong className="text-white text-sm font-bold">₹{quote.price ? quote.price.toLocaleString() : 0}</strong></span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <HiOutlineClock className="w-4 h-4 text-slate-500" />

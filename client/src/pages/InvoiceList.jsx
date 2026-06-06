@@ -8,7 +8,7 @@ const InvoiceList = () => {
 
   if (!user) return null;
 
-  return user.role === 'Admin' ? <ManagerInvoiceList /> : <VendorInvoiceList />;
+  return (user.role === 'Admin' || user.role === 'SuperAdmin') ? <ManagerInvoiceList /> : <VendorInvoiceList />;
 };
 
 export default InvoiceList;

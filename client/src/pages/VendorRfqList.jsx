@@ -141,7 +141,7 @@ const VendorRfqList = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <HiOutlineCurrencyDollar className="w-4 h-4 text-slate-500" />
-                    <span>Budget: <strong className="text-slate-100">${rfq.budget ? rfq.budget.toLocaleString() : 0}</strong></span>
+                    <span>Budget: <strong className="text-slate-100">₹{rfq.budget ? rfq.budget.toLocaleString() : 0}</strong></span>
                   </div>
                   <div className="flex items-center space-x-2 col-span-2">
                     <HiOutlineCalendar className="w-4 h-4 text-slate-500" />
@@ -201,7 +201,7 @@ const VendorRfqList = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
-                      Total Bid Price ($)
+                      Total Bid Price (₹)
                     </label>
                     <input
                       type="number"

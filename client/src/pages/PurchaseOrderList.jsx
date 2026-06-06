@@ -8,7 +8,7 @@ const PurchaseOrderList = () => {
 
   if (!user) return null;
 
-  return user.role === 'Admin' ? <ManagerPoList /> : <VendorPoList />;
+  return (user.role === 'Admin' || user.role === 'SuperAdmin') ? <ManagerPoList /> : <VendorPoList />;
 };
 
 export default PurchaseOrderList;

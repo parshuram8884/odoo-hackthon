@@ -95,7 +95,7 @@ const VendorPoList = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <HiOutlineCash className="w-4 h-4 text-slate-500" />
-                    <span>PO Total Amount: <strong className="text-white font-bold">${po.totalAmount ? po.totalAmount.toLocaleString() : 0}</strong></span>
+                    <span>PO Total Amount: <strong className="text-white font-bold">₹{po.totalAmount ? po.totalAmount.toLocaleString() : 0}</strong></span>
                   </div>
                 </div>
 
@@ -163,12 +163,12 @@ const VendorPoList = () => {
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
-                      Billing Amount ($)
+                      Billing Amount (₹)
                     </label>
                     <input
                       type="text"
                       disabled
-                      value={`$${selectedPo.totalAmount ? selectedPo.totalAmount.toLocaleString() : 0}`}
+                      value={`₹${selectedPo.totalAmount ? selectedPo.totalAmount.toLocaleString() : 0}`}
                       className="w-full bg-slate-950/50 border border-slate-800 rounded-lg py-2 px-3 text-sm text-slate-500 cursor-not-allowed font-medium"
                     />
                   </div>

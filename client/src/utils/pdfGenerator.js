@@ -145,7 +145,7 @@ export const downloadInvoicePdf = (invoice) => {
 
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(colors.textDark[0], colors.textDark[1], colors.textDark[2]);
-  doc.text(`$${invoice.amount ? invoice.amount.toLocaleString() : '0.00'}`, 160, 117);
+  doc.text(`₹${invoice.amount ? invoice.amount.toLocaleString() : '0.00'}`, 160, 117);
 
   // Table row bottom line (calculating height of description text block)
   const descHeight = splitDesc.length * 5;
@@ -163,7 +163,7 @@ export const downloadInvoicePdf = (invoice) => {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(18);
   doc.setTextColor(colors.primary[0], colors.primary[1], colors.primary[2]);
-  doc.text(`$${invoice.amount ? invoice.amount.toLocaleString() : '0.00'}`, 160, totalY);
+  doc.text(`₹${invoice.amount ? invoice.amount.toLocaleString() : '0.00'}`, 160, totalY);
 
   // --- 6. Notes / Payment Terms Section ---
   const notesY = totalY + 20;

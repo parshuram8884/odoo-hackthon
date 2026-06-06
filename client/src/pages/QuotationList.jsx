@@ -8,7 +8,7 @@ const QuotationList = () => {
 
   if (!user) return null;
 
-  return user.role === 'Admin' ? <ManagerQuotationList /> : <VendorQuotationList />;
+  return (user.role === 'Admin' || user.role === 'SuperAdmin') ? <ManagerQuotationList /> : <VendorQuotationList />;
 };
 
 export default QuotationList;

@@ -108,7 +108,7 @@ const ManagerDashboard = () => {
           </div>
           <div className="mt-4">
             <span className="text-2xl font-extrabold text-white">
-              ${totalBudget.toLocaleString()}
+              ₹{totalBudget.toLocaleString()}
             </span>
             <span className="text-xs text-slate-500 block mt-1">Across all project RFQs</span>
           </div>
@@ -136,7 +136,7 @@ const ManagerDashboard = () => {
                 <div>
                   <h4 className="text-sm font-semibold text-slate-200">{rfq.title}</h4>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Budget: <span className="text-slate-300 font-medium">${rfq.budget ? rfq.budget.toLocaleString() : 0}</span> &bull; Deadline: <span className="text-slate-300 font-medium">{rfq.deadline}</span>
+                    Budget: <span className="text-slate-300 font-medium">₹{rfq.budget ? rfq.budget.toLocaleString() : 0}</span> &bull; Deadline: <span className="text-slate-300 font-medium">{rfq.deadline}</span>
                   </p>
                 </div>
                 <span
@@ -180,7 +180,7 @@ const ManagerDashboard = () => {
                         <h4 className="text-xs font-bold text-slate-300 truncate max-w-[160px]">{q.rfqTitle}</h4>
                         <span className="text-[10px] text-slate-500 block mt-0.5">{q.vendorName}</span>
                       </div>
-                      <span className="text-xs font-extrabold text-indigo-400">${q.price ? q.price.toLocaleString() : 0}</span>
+                      <span className="text-xs font-extrabold text-indigo-400">₹{q.price ? q.price.toLocaleString() : 0}</span>
                     </div>
                   </div>
                 ))

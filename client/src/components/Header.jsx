@@ -1,9 +1,9 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
-import { HiOutlineUserCircle, HiOutlineSwitchHorizontal } from 'react-icons/hi';
+import { HiOutlineUserCircle, HiOutlineSwitchHorizontal, HiOutlineLogout } from 'react-icons/hi';
 
 const Header = () => {
-  const { user, login } = useApp();
+  const { user, login, logout } = useApp();
 
   if (!user) return null;
 
@@ -26,6 +26,16 @@ const Header = () => {
       <div className="flex items-center space-x-4">
         {/* Role Toggle Tooltip/Button */}
         
+        {user.role === 'SuperAdmin' && (
+          <button
+            onClick={logout}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-red-400 hover:bg-slate-800 border border-slate-800 transition-all cursor-pointer"
+            title="Log Out"
+          >
+            <HiOutlineLogout className="w-4 h-4" />
+            <span>Sign Out</span>
+          </button>
+        )}
 
         <div className="h-6 w-px bg-slate-800"></div>
 

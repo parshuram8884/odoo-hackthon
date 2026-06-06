@@ -33,13 +33,18 @@ const Login = () => {
     setPassword('••••••••');
   };
 
+  const autofillSuperAdmin = () => {
+    setEmail('superadmin@vendorbridge.com');
+    setPassword('superadmin123');
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4">
       {/* Background blobs for premium glassmorphism feel */}
       <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      <div className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl backdrop-blur-md">
+      <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl backdrop-blur-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-indigo-700 text-white font-extrabold text-2xl shadow-lg shadow-indigo-500/20 mb-4">
             VB
@@ -53,25 +58,35 @@ const Login = () => {
         </div>
 
         {/* Demo Quick login buttons */}
-        <div className="grid grid-cols-2 gap-3 mb-6">
+        <div className="grid grid-cols-3 gap-2.5 mb-6">
           <button
             onClick={autofillAdmin}
-            className="flex flex-col items-center justify-center p-3 rounded-xl bg-slate-800 border border-slate-700 hover:border-indigo-500 hover:bg-slate-750 transition text-left group"
+            className="flex flex-col items-center justify-center p-2 rounded-xl bg-slate-800 border border-slate-700 hover:border-indigo-500 hover:bg-slate-750 transition text-center group cursor-pointer"
           >
-            <span className="text-xs font-semibold text-slate-300 group-hover:text-indigo-400">
-              Registered as Manager
+            <span className="text-[10px] font-bold text-slate-350 tracking-wide group-hover:text-indigo-400">
+              Manager
             </span>
-            <span className="text-[10px] text-slate-400 mt-0.5">Quick Login</span>
+            <span className="text-[9px] text-slate-500 mt-0.5">Quick Login</span>
           </button>
 
           <button
             onClick={autofillVendor}
-            className="flex flex-col items-center justify-center p-3 rounded-xl bg-slate-800 border border-slate-700 hover:border-emerald-500 hover:bg-slate-750 transition text-left group"
+            className="flex flex-col items-center justify-center p-2 rounded-xl bg-slate-800 border border-slate-700 hover:border-emerald-500 hover:bg-slate-750 transition text-center group cursor-pointer"
           >
-            <span className="text-xs font-semibold text-slate-300 group-hover:text-emerald-400">
-              Registered Vendor
+            <span className="text-[10px] font-bold text-slate-355 tracking-wide group-hover:text-emerald-400">
+              Vendor
             </span>
-            <span className="text-[10px] text-slate-400 mt-0.5">Quick Login</span>
+            <span className="text-[9px] text-slate-500 mt-0.5">Quick Login</span>
+          </button>
+
+          <button
+            onClick={autofillSuperAdmin}
+            className="flex flex-col items-center justify-center p-2 rounded-xl bg-slate-800 border border-slate-700 hover:border-amber-500 hover:bg-slate-750 transition text-center group cursor-pointer"
+          >
+            <span className="text-[10px] font-bold text-slate-350 tracking-wide group-hover:text-amber-400">
+              Super Admin
+            </span>
+            <span className="text-[9px] text-slate-500 mt-0.5">Quick Login</span>
           </button>
         </div>
 

@@ -77,7 +77,7 @@ const SubmitQuotation = () => {
                 <option value="">-- Select an active RFQ project --</option>
                 {availableRfqs.map((rfq) => (
                   <option key={rfq.id} value={rfq.id}>
-                    {rfq.id} - {rfq.title} (Budget: ${rfq.budget ? rfq.budget.toLocaleString() : 0})
+                    {rfq.id} - {rfq.title} (Budget: ₹{rfq.budget ? rfq.budget.toLocaleString() : 0})
                   </option>
                 ))}
               </select>
@@ -87,7 +87,7 @@ const SubmitQuotation = () => {
               {/* Bid price */}
               <div>
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-                  Your Quote Price ($ USD)
+                  Your Quote Price (₹)
                 </label>
                 <input
                   type="number"

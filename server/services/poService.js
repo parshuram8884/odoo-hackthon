@@ -2,7 +2,7 @@ const { PurchaseOrder } = require('../models');
 
 const getPurchaseOrders = async (role, email) => {
   let filter = {};
-  if (role !== 'Admin') {
+  if (role !== 'Admin' && role !== 'SuperAdmin') {
     filter = { vendorEmail: email.toLowerCase() };
   }
   return await PurchaseOrder.find(filter).sort({ createdDate: -1, id: -1 });
